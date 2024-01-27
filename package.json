@@ -1,0 +1,22 @@
+{
+  "name": "jentis",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gjodim/JENTIS.git"
+  },
+  "author": "Gjorgi Dimov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Gjodim/JENTIS/issues"
+  },
+  "homepage": "https://github.com/Gjodim/JENTIS#readme",
+  "dependencies": {
+    "cypress": "^13.6.3"
+  }
+}
