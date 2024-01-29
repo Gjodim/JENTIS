@@ -1,0 +1,7 @@
+{
+  "First Name" : "John",
+  "Last Name" : "Doe",
+  "email" : "john_doe@jentis.com",
+  "password" : "Password123!@#",
+  "unmatchingPassword" : "1"
+}

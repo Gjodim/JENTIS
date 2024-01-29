@@ -1,0 +1,15 @@
+{
+  "First Name" : "John",
+  "Last Name" : "Doe",
+  "Date of Birth" : "1923-04-04",
+  "Email" : "john_doe@jentis.com",
+  "Phone" : "01252445612",
+  "Street Address 1" : "Long Drive 1",
+  "Street Address 2" : "Long Drive 2",
+  "City" : "Los Angeles",
+  "State or Province" : "California",
+  "Postal Code" : "12",
+  "Country" : "USA",
+
+  "Invalid Date of Birth" : "123"
+}
