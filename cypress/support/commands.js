@@ -32,6 +32,11 @@ Cypress.Commands.add('currentPageIs', (page) => {
     cy.url().should('include', page)
 })
 
+/**
+ * Get a field of type ${fieldType} containing ${attribute} with ${value}
+ * @example
+ * cy.getField('label', 'for', 'publish')
+ * */
 Cypress.Commands.add('getField', (fieldType, attribute, value) => {
     return cy.get(`${fieldType}[${attribute}=${value}]`, {timeout: 10000})
 })
@@ -87,4 +92,27 @@ Cypress.Commands.add('addContact', (url, token, requestBody) => {
             method: method,
             url: `**/${partialURL}*`,
         }).as(alias)})
+
+    Cypress.Commands.add('loginUser', (url, email, password) => {
+        cy.request({
+            method: 'POST',
+            url: url, // Replace with your actual login endpoint
+            body: {
+                email: email,
+                password: password
+            },
+            headers: {
+                'Content-Type': 'application/json'
+                // Add any additional headers if required
+            }
+        })/*.then((response) => {
+            // Log the response to the console
+            cy.log('Login Response:', response.body);
+
+            // You can save the token or other information from the response if needed
+            // For example, you might want to save the token for subsequent requests
+            cy.wrap(response.body.token).as('authToken');
+        });*/
+    });
+
 });

@@ -6,12 +6,15 @@ let index = helper.indexByOne()
 
 describe('AddNewContact', () => {
     beforeEach('Login', () => {
-        cy.visitPage('/')
+        cy.loginUser('users/login', username, password)
+        cy.visitPage('/contactList')
+        cy.currentPageIs('/contactList')
+        /*cy.visitPage('/')
         cy.currentPageIs('/')
         cy.typeInField(cy.getField("input", "id", "email"), username, false)
         cy.typeInField(cy.getField("input", "id", "password"), password, false)
         cy.clickOption(cy.getField("button", "id", "submit"))
-        cy.currentPageIs('contactList')
+        cy.currentPageIs('contactList')*/
     })
 
     it(`Access page`, () => {
