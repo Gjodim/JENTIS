@@ -5,7 +5,7 @@ const password = Cypress.env("password");
 const token = Cypress.env("bearerToken");
 let index = helper.indexByOne()
 
-describe('AddNewContact', () => {
+describe('ContactDetails', () => {
     beforeEach('Login', () => {
         cy.visitPage('/')
         cy.currentPageIs('/')
@@ -25,8 +25,8 @@ describe('AddNewContact', () => {
 
     it(`Access page`, () => {
         cy.fixture('sampleContact.json').then(data => {
-            let firstName = helper.randomIndex() + index + data["First Name"]
-            let lastName = helper.randomIndex() + index + data["Last Name"]
+            let firstName = data["contact"]["firstName"]
+            let lastName = data["contact"]["lastName"]
 
             cy.clickOption(cy.getElementContains('td', firstName + ' ' + lastName).first())
             cy.currentPageIs('contactDetails')
@@ -38,8 +38,8 @@ describe('AddNewContact', () => {
 
     it(`Verify fields existence`, () => {
         cy.fixture('sampleContact.json').then(data => {
-            let firstName = helper.randomIndex() + index + data["First Name"]
-            let lastName = helper.randomIndex() + index + data["Last Name"]
+            let firstName = data["contact"]["firstName"]
+            let lastName = data["contact"]["lastName"]
 
             cy.clickOption(cy.getElementContains('td', firstName + ' ' + lastName).first())
             cy.currentPageIs('contactDetails')
@@ -54,98 +54,123 @@ describe('AddNewContact', () => {
 
     it(`Verify contact details data`, () => {
         cy.fixture('sampleContact.json').then(data => {
-            let firstName = helper.randomIndex() + index + data["firstName"]
-            let lastName = helper.randomIndex() + index + data["lastName"]
+            let firstName = data["contact"]["firstName"]
+            let lastName = data["contact"]["lastName"]
 
             cy.clickOption(cy.getElementContains('td', firstName + ' ' + lastName).first())
             cy.currentPageIs('contactDetails')
 
-            cy.assertFieldVisible(cy.getElementContains('#firstName',), data["firstName"])
-            cy.assertFieldVisible(cy.getElementContains('#lastName',), data["lastName"])
-            cy.assertFieldVisible(cy.getElementContains('#birthdate',), data["birthdate"])
-            cy.assertFieldVisible(cy.getElementContains('#email',), data["email"])
-            cy.assertFieldVisible(cy.getElementContains('#phone',), data["phone"])
-            cy.assertFieldVisible(cy.getElementContains('#street1',), data["street1"])
-            cy.assertFieldVisible(cy.getElementContains('#street2',), data["street2"])
-            cy.assertFieldVisible(cy.getElementContains('#city',), data["city"])
-            cy.assertFieldVisible(cy.getElementContains('#stateProvince',), data["stateProvince"])
-            cy.assertFieldVisible(cy.getElementContains('#postalCode',), data["postalCode"])
-            cy.assertFieldVisible(cy.getElementContains('#country',), data["country"])
+            cy.assertFieldVisible(cy.getElementContains('#firstName', data["contact"]["firstName"]))
+            cy.assertFieldVisible(cy.getElementContains('#lastName', data["contact"]["lastName"]))
+            cy.assertFieldVisible(cy.getElementContains('#birthdate', data["contact"]["birthdate"]))
+            cy.assertFieldVisible(cy.getElementContains('#email', data["contact"]["email"]))
+            cy.assertFieldVisible(cy.getElementContains('#phone', data["contact"]["phone"]))
+            cy.assertFieldVisible(cy.getElementContains('#street1', data["contact"]["street1"]))
+            cy.assertFieldVisible(cy.getElementContains('#street2', data["contact"]["street2"]))
+            cy.assertFieldVisible(cy.getElementContains('#city', data["contact"]["city"]))
+            cy.assertFieldVisible(cy.getElementContains('#stateProvince', data["contact"]["stateProvince"]))
+            cy.assertFieldVisible(cy.getElementContains('#postalCode', data["contact"]["postalCode"]))
+            cy.assertFieldVisible(cy.getElementContains('#country', data["contact"]["country"]))
 
         })
     })
 
     it(`Verify contact can be edited`, () => {
         cy.fixture('sampleContact.json').then(data => {
-            let firstName = helper.randomIndex() + index + data["firstName"]
-            let lastName = helper.randomIndex() + index + data["lastName"]
+            let firstName = data["contact"]["firstName"]
+            let lastName = data["contact"]["lastName"]
+            let dateOfBirth = data["contact"]["birthdate"]
+            let email = data["contact"]["email"]
+            let phone = data["contact"]["phone"]
+            let streetAddress1 = data["contact"]["street1"]
+            let streetAddress2 = data["contact"]["street2"]
+            let city = data["contact"]["city"]
+            let stateOrProvince = data["contact"]["stateProvince"]
+            let postalCode = data["contact"]["postalCode"]
+            let country = data["contact"]["country"]
+
+            let edit_firstName = '1' + firstName
+            let edit_lastName = '1' + lastName
+            let edit_dateOfBirth = dateOfBirth
+            let edit_email = '1' + email
+            let edit_phone = '1' + phone
+            let edit_streetAddress1 = '1' + streetAddress1
+            let edit_streetAddress2 = '1' + streetAddress2
+            let edit_city = '1' + city
+            let edit_stateOrProvince = '1' + stateOrProvince
+            let edit_postalCode = '1' + postalCode
+            let edit_country = '1' + country
 
             cy.clickOption(cy.getElementContains('td', firstName + ' ' + lastName).first())
             cy.currentPageIs('contactDetails')
             cy.clickOption(cy.getField("button", "id", "edit-contact"))
             cy.currentPageIs('editContact')
+
+            cy.assertFieldVisible(cy.getField("input", "id", "firstName"))
+            cy.assertFieldVisible(cy.getField("input", "id", "lastName"))
+            cy.assertFieldVisible(cy.getField("input", "id", "birthdate"))
+            cy.assertFieldVisible(cy.getField("input", "id", "email"))
+            cy.assertFieldVisible(cy.getField("input", "id", "phone"))
+            cy.assertFieldVisible(cy.getField("input", "id", "street1"))
+            cy.assertFieldVisible(cy.getField("input", "id", "street2"))
+            cy.assertFieldVisible(cy.getField("input", "id", "city"))
+            cy.assertFieldVisible(cy.getField("input", "id", "stateProvince"))
+            cy.assertFieldVisible(cy.getField("input", "id", "postalCode"))
+            cy.assertFieldVisible(cy.getField("input", "id", "country"))
+            cy.assertFieldVisible(cy.getField("button", "id", "submit"))
+            cy.assertFieldVisible(cy.getField("button", "id", "cancel"))
+            cy.assertFieldVisible(cy.getField("button", "id", "logout"))
+
+            cy.typeInField(cy.getField("input", "id", "firstName"), edit_firstName)
+            cy.typeInField(cy.getField("input", "id", "lastName"), edit_lastName)
+            cy.typeInField(cy.getField("input", "id", "birthdate"), edit_dateOfBirth)
+            cy.typeInField(cy.getField("input", "id", "email"), edit_email)
+            cy.typeInField(cy.getField("input", "id", "phone"), edit_phone)
+            cy.typeInField(cy.getField("input", "id", "street1"), edit_streetAddress1)
+            cy.typeInField(cy.getField("input", "id", "street2"), edit_streetAddress2)
+            cy.typeInField(cy.getField("input", "id", "city"), edit_city)
+            cy.typeInField(cy.getField("input", "id", "stateProvince"), edit_stateOrProvince)
+            cy.typeInField(cy.getField("input", "id", "postalCode"), edit_postalCode)
+            cy.typeInField(cy.getField("input", "id", "country"), edit_country)
+            cy.clickOption(cy.getField("button", "id", "submit"))
+
+            cy.currentPageIs('contactDetails')
+            cy.assertFieldVisible(cy.getElementContains('#firstName', edit_firstName))
+            cy.assertFieldVisible(cy.getElementContains('#lastName', edit_lastName))
+            cy.assertFieldVisible(cy.getElementContains('#birthdate', edit_dateOfBirth))
+            cy.assertFieldVisible(cy.getElementContains('#email', edit_email))
+            cy.assertFieldVisible(cy.getElementContains('#phone', edit_phone))
+            cy.assertFieldVisible(cy.getElementContains('#street1', edit_streetAddress1))
+            cy.assertFieldVisible(cy.getElementContains('#street2', edit_streetAddress2))
+            cy.assertFieldVisible(cy.getElementContains('#city', edit_city))
+            cy.assertFieldVisible(cy.getElementContains('#stateProvince', edit_stateOrProvince))
+            cy.assertFieldVisible(cy.getElementContains('#postalCode', edit_postalCode))
+            cy.assertFieldVisible(cy.getElementContains('#country', edit_country))
         })
     })
 
     it(`Verify return to Contact List page`, () => {
-        cy.visitPage('addContact')
-        cy.fixture('newContact.json').then(data => {
-            let firstName = helper.randomIndex() + index + data["First Name"]
-            let lastName = helper.randomIndex() + index + data["Last Name"]
+        cy.fixture('sampleContact.json').then(data => {
+            let firstName = data["contact"]["firstName"]
+            let lastName = data["contact"]["lastName"]
 
-            cy.typeInField(cy.getField("input", "id", "firstName"), firstName)
-            cy.clickOption(cy.getField("button", "id", "submit"))
-            cy.assertFieldExists(cy.getField('span', 'id', 'error'))
-            cy.assertFieldVisible(cy.getElementContains('span', 'Contact validation failed: lastName: Path `lastName` is required.'))
-            cy.currentPageIs('addContact')
-            cy.getField("input", "id", "firstName").clear()
-
-            cy.typeInField(cy.getField("input", "id", "lastName"), lastName)
-            cy.clickOption(cy.getField("button", "id", "submit"))
-            cy.assertFieldExists(cy.getField('span', 'id', 'error'))
-            cy.assertFieldVisible(cy.getElementContains('span', 'Contact validation failed: firstName: Path `firstName` is required.'))
-            cy.currentPageIs('addContact')
-
-            cy.visitPage('contactList')
-            cy.get('td').contains(firstName + ' ' + lastName).should('not.exist')
+            cy.clickOption(cy.getElementContains('td', firstName + ' ' + lastName).first())
+            cy.currentPageIs('contactDetails')
+            cy.clickOption(cy.getField("button", "id", "return"))
+            cy.currentPageIs('contactList')
         })
     })
 
     it(`Verify contact can be deleted`, () => {
-        cy.visitPage('addContact')
-        cy.fixture('newContact.json').then(data => {
-            let firstName = helper.randomIndex() + index + data["First Name"]
-            let lastName = helper.randomIndex() + index + data["Last Name"]
-            let dateOfBirth = data["Date of Birth"]
-            let email = helper.randomIndex() + index + data["Email"]
-            let phone = data["Phone"]
-            let streetAddress1 = helper.randomIndex() + index + data["Street Address 1"]
-            let streetAddress2 = helper.randomIndex() + index + data["Street Address 2"]
-            let city = helper.randomIndex() + index + data["City"]
-            let stateOrProvince = helper.randomIndex() + index + data["State or Province"]
-            let postalCode = helper.randomIndex() + data["Postal Code"]
-            let country = helper.randomIndex() + index + data["Country"]
+        cy.fixture('sampleContact.json').then(data => {
+            let firstName = '1' + data["contact"]["firstName"]
+            let lastName = '1' + data["contact"]["lastName"]
 
-            cy.typeInField(cy.getField("input", "id", "firstName"), firstName)
-            cy.typeInField(cy.getField("input", "id", "lastName"), lastName)
-            cy.typeInField(cy.getField("input", "id", "birthdate"), dateOfBirth)
-            cy.typeInField(cy.getField("input", "id", "email"), email)
-            cy.typeInField(cy.getField("input", "id", "phone"), phone)
-            cy.typeInField(cy.getField("input", "id", "street1"), streetAddress1)
-            cy.typeInField(cy.getField("input", "id", "street2"), streetAddress2)
-            cy.typeInField(cy.getField("input", "id", "city"), city)
-            cy.typeInField(cy.getField("input", "id", "stateProvince"), stateOrProvince)
-            cy.typeInField(cy.getField("input", "id", "postalCode"), postalCode)
-            cy.typeInField(cy.getField("input", "id", "country"), country)
-            cy.clickOption(cy.getField("button", "id", "submit"))
-
-            cy.assertFieldVisible(cy.getElementContains('td', firstName + ' ' + lastName))
-            cy.assertFieldVisible(cy.getElementContains('td', dateOfBirth))
-            cy.assertFieldVisible(cy.getElementContains('td', email))
-            cy.assertFieldVisible(cy.getElementContains('td', phone))
-            cy.assertFieldVisible(cy.getElementContains('td', streetAddress1 + ' ' + streetAddress2))
-            cy.assertFieldVisible(cy.getElementContains('td', city + ' ' + stateOrProvince + ' ' + postalCode))
-            cy.assertFieldVisible(cy.getElementContains('td', country))
+            cy.clickOption(cy.getElementContains('td', firstName + ' ' + lastName).first())
+            cy.currentPageIs('contactDetails')
+            cy.clickOption(cy.getField("button", "id", "delete"))
+            cy.currentPageIs('contactList')
+            cy.get('td').contains(firstName + ' ' + lastName).should('not.exist')
         })
     })
 

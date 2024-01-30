@@ -41,7 +41,7 @@ Cypress.Commands.add('getElement', (element) => {
 })
 
 Cypress.Commands.add('getElementContains', (element, text) => {
-    cy.get(element).contains(text)
+    cy.get(element, {timeout: 10000}).contains(text)
 })
 
 Cypress.Commands.add('clickOption', (option) => {
@@ -81,4 +81,10 @@ Cypress.Commands.add('addContact', (url, token, requestBody) => {
             },
         });
     })
+
+    Cypress.Commands.add('interceptRequest', (method, partialURL, alias) => {
+        cy.intercept({
+            method: method,
+            url: `**/${partialURL}*`,
+        }).as(alias)})
 });

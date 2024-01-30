@@ -29,6 +29,7 @@ describe('AddNewContact', () => {
         cy.assertFieldVisible(cy.getField("input", "id", "lastName"))
         cy.assertFieldVisible(cy.getField("input", "id", "birthdate"))
         cy.assertFieldVisible(cy.getField("input", "id", "email"))
+        cy.assertFieldVisible(cy.getField("input", "id", "phone"))
         cy.assertFieldVisible(cy.getField("input", "id", "street1"))
         cy.assertFieldVisible(cy.getField("input", "id", "street2"))
         cy.assertFieldVisible(cy.getField("input", "id", "city"))
