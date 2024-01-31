@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "cy:run:chrome": "npx cypress run --browser chrome",
-    "cy:run:report": "npx cypress run --reporter mochawesome --browser chrome",
+    "cy:run:report": "npx cypress run --reporter mochawesome --browser chrome"
   },
   "repository": {
     "type": "git",
