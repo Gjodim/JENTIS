@@ -1,0 +1,15 @@
+{
+  "contact": {
+    "firstName": "Jane",
+    "lastName": "Doen",
+    "birthdate": "1923-03-03",
+    "email": "jane_doen@jentis.com",
+    "phone": "01252445613",
+    "street1": "Long Drive 11",
+    "street2": "Long Drive 22",
+    "city": "Los Angeles",
+    "stateProvince": "California",
+    "postalCode": "34",
+    "country": "USA"
+  }
+}

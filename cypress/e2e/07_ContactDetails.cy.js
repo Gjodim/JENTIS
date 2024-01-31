@@ -3,29 +3,31 @@ import {helper} from "../support/helper";
 const username = Cypress.env("username");
 const password = Cypress.env("password");
 const token = Cypress.env("bearerToken");
-let index = helper.indexByOne()
 
 describe('ContactDetails', () => {
     beforeEach('Login', () => {
-        cy.loginUser('users/login', username, password)
-        cy.visitPage('/contactList')
-        cy.currentPageIs('/contactList')
-        /*cy.typeInField(cy.getField("input", "id", "email"), username, false)
+        //cy.loginUser('users/login', username, password)
+        //cy.visitPage('/contactList')
+        //cy.currentPageIs('/contactList')
+        cy.visitPage('/')
+        cy.currentPageIs('/')
+        cy.typeInField(cy.getField("input", "id", "email"), username, false)
         cy.typeInField(cy.getField("input", "id", "password"), password, false)
         cy.clickOption(cy.getField("button", "id", "submit"))
-        cy.currentPageIs('contactList')*/
+        cy.currentPageIs('contactList')
     })
     before('Add sample Contact', () => {
-        cy.fixture('sampleContact.json').then(data => {
+        /*cy.fixture('apiContact.json').then(data => {
             cy.addContact('contacts', token, data["contact"])
-        })
+        })*/
+        helper.addContact()
     })
     /*after('Delete Contacts', () => {
         cy.deleteContacts('contacts/', token)
     })*/
 
     it(`Access page`, () => {
-        cy.fixture('sampleContact.json').then(data => {
+        cy.fixture('apiContact.json').then(data => {
             let firstName = data["contact"]["firstName"]
             let lastName = data["contact"]["lastName"]
 
@@ -38,9 +40,12 @@ describe('ContactDetails', () => {
     })
 
     it(`Verify fields existence`, () => {
-        cy.fixture('sampleContact.json').then(data => {
+        cy.fixture('apiContact.json').then(data => {
             let firstName = data["contact"]["firstName"]
             let lastName = data["contact"]["lastName"]
+
+            cy.intercept('GET', '**/contacts/*').as('contactDetails');
+
 
             cy.clickOption(cy.getElementContains('td', firstName + ' ' + lastName).first())
             cy.currentPageIs('contactDetails')
@@ -50,11 +55,16 @@ describe('ContactDetails', () => {
             cy.assertFieldVisible(cy.getField("button", "id", "delete"))
             cy.assertFieldVisible(cy.getField("button", "id", "return"))
             cy.assertFieldVisible(cy.getField("button", "id", "logout"))
+
+            cy.wait("@contactDetails").then(intercept => {
+                cy.get('@contactDetails').should('exist')
+                cy.expect(intercept.response.statusCode).to.equal(200)
+            })
         })
     })
 
     it(`Verify contact details data`, () => {
-        cy.fixture('sampleContact.json').then(data => {
+        cy.fixture('apiContact.json').then(data => {
             let firstName = data["contact"]["firstName"]
             let lastName = data["contact"]["lastName"]
 
@@ -77,7 +87,7 @@ describe('ContactDetails', () => {
     })
 
     it(`Verify contact can be edited`, () => {
-        cy.fixture('sampleContact.json').then(data => {
+        cy.fixture('apiContact.json').then(data => {
             let firstName = data["contact"]["firstName"]
             let lastName = data["contact"]["lastName"]
             let dateOfBirth = data["contact"]["birthdate"]
@@ -104,8 +114,16 @@ describe('ContactDetails', () => {
 
             cy.clickOption(cy.getElementContains('td', firstName + ' ' + lastName).first())
             cy.currentPageIs('contactDetails')
+
+            cy.intercept('GET', '**/contacts/*').as('contactDetails');
+
             cy.clickOption(cy.getField("button", "id", "edit-contact"))
             cy.currentPageIs('editContact')
+
+            cy.wait("@contactDetails").then(intercept => {
+                cy.get('@contactDetails').should('exist')
+                cy.expect(intercept.response.statusCode).to.equal(200)
+            })
 
             cy.assertFieldVisible(cy.getField("input", "id", "firstName"))
             cy.assertFieldVisible(cy.getField("input", "id", "lastName"))
@@ -151,27 +169,41 @@ describe('ContactDetails', () => {
     })
 
     it(`Verify return to Contact List page`, () => {
-        cy.fixture('sampleContact.json').then(data => {
+        cy.fixture('apiContact.json').then(data => {
             let firstName = data["contact"]["firstName"]
             let lastName = data["contact"]["lastName"]
+
+            cy.intercept('GET', '**/contacts*').as('contactDetails');
 
             cy.clickOption(cy.getElementContains('td', firstName + ' ' + lastName).first())
             cy.currentPageIs('contactDetails')
             cy.clickOption(cy.getField("button", "id", "return"))
             cy.currentPageIs('contactList')
+
+            cy.wait("@contactDetails").then(intercept => {
+                cy.get('@contactDetails').should('exist')
+                cy.expect(intercept.response.statusCode).to.equal(200)
+            })
         })
     })
 
     it(`Verify contact can be deleted`, () => {
-        cy.fixture('sampleContact.json').then(data => {
+        cy.fixture('apiContact.json').then(data => {
             let firstName = '1' + data["contact"]["firstName"]
             let lastName = '1' + data["contact"]["lastName"]
+
+            cy.intercept('DELETE', '**/contacts/*').as('contactDetails');
 
             cy.clickOption(cy.getElementContains('td', firstName + ' ' + lastName).first())
             cy.currentPageIs('contactDetails')
             cy.clickOption(cy.getField("button", "id", "delete"))
             cy.currentPageIs('contactList')
             cy.get('td').contains(firstName + ' ' + lastName).should('not.exist')
+
+            cy.wait("@contactDetails").then(intercept => {
+                cy.get('@contactDetails').should('exist')
+                cy.expect(intercept.response.statusCode).to.equal(200)
+            })
         })
     })
 

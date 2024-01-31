@@ -75,6 +75,7 @@ Cypress.Commands.add('addContact', (url, token, requestBody) => {
         },
         body: requestBody,
     });
+})
 
     Cypress.Commands.add('deleteContacts', (url, token) => {
         cy.request({
@@ -91,7 +92,8 @@ Cypress.Commands.add('addContact', (url, token, requestBody) => {
         cy.intercept({
             method: method,
             url: `**/${partialURL}*`,
-        }).as(alias)})
+        }).as(alias)
+    })
 
     Cypress.Commands.add('loginUser', (url, email, password) => {
         cy.request({
@@ -105,14 +107,12 @@ Cypress.Commands.add('addContact', (url, token, requestBody) => {
                 'Content-Type': 'application/json'
                 // Add any additional headers if required
             }
-        })/*.then((response) => {
+        }).then((response) => {
             // Log the response to the console
             cy.log('Login Response:', response.body);
 
             // You can save the token or other information from the response if needed
             // For example, you might want to save the token for subsequent requests
             cy.wrap(response.body.token).as('authToken');
-        });*/
+        });
     });
-
-});

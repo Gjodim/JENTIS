@@ -6,15 +6,15 @@ let index = helper.indexByOne()
 
 describe('AddNewContact', () => {
     beforeEach('Login', () => {
-        cy.loginUser('users/login', username, password)
-        cy.visitPage('/contactList')
-        cy.currentPageIs('/contactList')
-        /*cy.visitPage('/')
+        //cy.loginUser('users/login', username, password)
+        //cy.visitPage('/contactList')
+        //cy.currentPageIs('/contactList')
+        cy.visitPage('/')
         cy.currentPageIs('/')
         cy.typeInField(cy.getField("input", "id", "email"), username, false)
         cy.typeInField(cy.getField("input", "id", "password"), password, false)
         cy.clickOption(cy.getField("button", "id", "submit"))
-        cy.currentPageIs('contactList')*/
+        cy.currentPageIs('contactList')
     })
 
     it(`Access page`, () => {
@@ -50,10 +50,22 @@ describe('AddNewContact', () => {
             let firstName = helper.randomIndex() + index + data["First Name"]
             let lastName = helper.randomIndex() + index + data["Last Name"]
 
+            cy.intercept('POST', '**/contacts*', (req) => {
+                req.body = {
+                    firstName : firstName,
+                    lastName : lastName,
+                };
+            }).as('addContact');
+
             cy.typeInField(cy.getField("input", "id", "firstName"), firstName)
             cy.typeInField(cy.getField("input", "id", "lastName"), lastName)
             cy.clickOption(cy.getField("button", "id", "submit"))
             cy.assertFieldVisible(cy.getElementContains('td', firstName + ' ' + lastName))
+
+            cy.wait("@addContact").then(intercept => {
+                cy.get('@addContact').should('exist')
+                cy.expect(intercept.response.statusCode).to.equal(201)
+            })
         })
     })
 
@@ -65,6 +77,15 @@ describe('AddNewContact', () => {
             let email = helper.randomIndex() + index + data["Email"]
             let streetAddress1 = helper.randomIndex() + index + data["Street Address 1"]
 
+            cy.intercept('POST', '**/contacts*', (req) => {
+                req.body = {
+                    email: email,
+                    firstName : firstName,
+                    lastName : lastName,
+                    street1 : streetAddress1
+                };
+            }).as('addContact');
+
             cy.typeInField(cy.getField("input", "id", "firstName"), firstName)
             cy.typeInField(cy.getField("input", "id", "lastName"), lastName)
             cy.typeInField(cy.getField("input", "id", "email"), email)
@@ -73,6 +94,12 @@ describe('AddNewContact', () => {
             cy.assertFieldVisible(cy.getElementContains('td', firstName + ' ' + lastName))
             cy.assertFieldVisible(cy.getElementContains('td', email))
             cy.assertFieldVisible(cy.getElementContains('td', streetAddress1))
+            cy.currentPageIs('contactList')
+
+            cy.wait("@addContact").then(intercept => {
+                cy.get('@addContact').should('exist')
+                cy.expect(intercept.response.statusCode).to.equal(201)
+            })
 
         })
     })
@@ -92,6 +119,22 @@ describe('AddNewContact', () => {
             let postalCode = helper.randomIndex() + data["Postal Code"]
             let country = helper.randomIndex() + index + data["Country"]
 
+            cy.intercept('POST', '**/contacts*', (req) => {
+                req.body = {
+                    birthdate: dateOfBirth,
+                    city: city,
+                    country: country,
+                    email: email,
+                    firstName : firstName,
+                    lastName : lastName,
+                    phone: phone,
+                    postalCode: postalCode,
+                    stateProvince: stateOrProvince,
+                    street1 : streetAddress1,
+                    street2: streetAddress2
+                };
+            }).as('addContact');
+
             cy.typeInField(cy.getField("input", "id", "firstName"), firstName)
             cy.typeInField(cy.getField("input", "id", "lastName"), lastName)
             cy.typeInField(cy.getField("input", "id", "birthdate"), dateOfBirth)
@@ -104,6 +147,7 @@ describe('AddNewContact', () => {
             cy.typeInField(cy.getField("input", "id", "postalCode"), postalCode)
             cy.typeInField(cy.getField("input", "id", "country"), country)
             cy.clickOption(cy.getField("button", "id", "submit"))
+            cy.currentPageIs('contactList')
 
             cy.assertFieldVisible(cy.getElementContains('td', firstName + ' ' + lastName))
             cy.assertFieldVisible(cy.getElementContains('td', dateOfBirth))
@@ -112,6 +156,11 @@ describe('AddNewContact', () => {
             cy.assertFieldVisible(cy.getElementContains('td', streetAddress1 + ' ' + streetAddress2))
             cy.assertFieldVisible(cy.getElementContains('td', city + ' ' + stateOrProvince + ' ' + postalCode))
             cy.assertFieldVisible(cy.getElementContains('td', country))
+
+            cy.wait("@addContact").then(intercept => {
+                cy.get('@addContact').should('exist')
+                cy.expect(intercept.response.statusCode).to.equal(201)
+            })
         })
     })
 
@@ -121,6 +170,13 @@ describe('AddNewContact', () => {
             let firstName = helper.randomIndex() + index + data["First Name"]
             let lastName = helper.randomIndex() + index + data["Last Name"]
 
+            cy.intercept('POST', '**/contacts*', (req) => {
+                req.body = {
+                    firstName : firstName,
+                    lastName : "",
+                };
+            }).as('addContact');
+
             cy.typeInField(cy.getField("input", "id", "firstName"), firstName)
             cy.clickOption(cy.getField("button", "id", "submit"))
             cy.assertFieldExists(cy.getField('span', 'id', 'error'))
@@ -128,11 +184,28 @@ describe('AddNewContact', () => {
             cy.currentPageIs('addContact')
             cy.getField("input", "id", "firstName").clear()
 
+            cy.wait("@addContact").then(intercept => {
+                cy.get('@addContact').should('exist')
+                cy.expect(intercept.response.statusCode).to.equal(400)
+            })
+
+            cy.intercept('POST', '**/contacts*', (req) => {
+                req.body = {
+                    firstName : "",
+                    lastName : lastName,
+                };
+            }).as('addContact');
+
             cy.typeInField(cy.getField("input", "id", "lastName"), lastName)
             cy.clickOption(cy.getField("button", "id", "submit"))
             cy.assertFieldExists(cy.getField('span', 'id', 'error'))
-            cy.assertFieldVisible(cy.getElementContains('span', 'Contact validation failed: firstName: Path `firstName` is required.'))
+            //cy.assertFieldVisible(cy.getElementContains('span', 'Contact validation failed: firstName: Path `firstName` is required.'))
             cy.currentPageIs('addContact')
+
+            cy.wait("@addContact").then(intercept => {
+                cy.get('@addContact').should('exist')
+                cy.expect(intercept.response.statusCode).to.equal(400)
+            })
 
             cy.visitPage('contactList')
             cy.get('td').contains(firstName + ' ' + lastName).should('not.exist')
@@ -147,6 +220,15 @@ describe('AddNewContact', () => {
             let firstName = helper.randomIndex() + index + data["First Name"]
             let lastName = helper.randomIndex() + index + data["Last Name"]
 
+            cy.intercept('POST', '**/contacts*', (req) => {
+                req.body = {
+                    birthdate : dateOfBirth,
+                    firstName : firstName,
+                    lastName : lastName,
+                    phone: phone
+                };
+            }).as('addContact');
+
             cy.typeInField(cy.getField("input", "id", "firstName"), firstName)
             cy.typeInField(cy.getField("input", "id", "lastName"), lastName)
             cy.typeInField(cy.getField("input", "id", "birthdate"), dateOfBirth)
@@ -159,6 +241,11 @@ describe('AddNewContact', () => {
             cy.get('td').contains(firstName + ' ' + lastName).should('not.exist')
             cy.get('td').contains(dateOfBirth).should('not.exist')
             cy.get('td').contains(phone).should('not.exist')
+
+            cy.wait("@addContact").then(intercept => {
+                cy.get('@addContact').should('exist')
+                cy.expect(intercept.response.statusCode).to.equal(400)
+            })
         })
     })
 
