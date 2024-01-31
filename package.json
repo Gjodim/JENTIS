@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "cy:run:chrome": "npx cypress run --browser chrome"
+    "cy:run:chrome": "npx cypress run --browser chrome",
+    "cy:run:report": "npx cypress run --reporter mochawesome --browser chrome",
   },
   "repository": {
     "type": "git",
@@ -18,5 +19,12 @@
   "homepage": "https://github.com/Gjodim/JENTIS#readme",
   "dependencies": {
     "cypress": "^13.6.3"
+  },
+  "devDependencies": {
+    "cypress-multi-reporters": "^1.6.4",
+    "mocha": "^10.2.0",
+    "mochawesome": "^7.1.3",
+    "mochawesome-merge": "^4.3.0",
+    "mochawesome-report-generator": "^6.2.0"
   }
 }

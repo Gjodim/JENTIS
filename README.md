@@ -18,6 +18,7 @@ run `npm install`
 ## run tests in headless/cli mode
 run scripts (headless run):
 - `npm run cy:run:chrome`  -  run all
+- `npm run cy:report`  -  run all with generated reports
 
 ## GitHub actions
 Github actions configured on each `push` - https://github.com/Gjodim/JENTIS/actions

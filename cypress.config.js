@@ -7,6 +7,19 @@ module.exports = defineConfig({
   defaultCommandTimeout: 20000,
   requestTimeout: 20000,
 
+  "reporter": "cypress-multi-reporters",
+  "reporterOptions": {
+    "reporterEnabled": "mochawesome",
+    "reportFilename": "[status]_[datetime]-[name]-report",
+    "mochawesomeReporterOptions": {
+      "reportDir": "cypress/reports",
+      "quiet": true,
+      "overwrite": true,
+      "html": true,
+      "json": true
+    }
+  },
+
   e2e: {
     setupNodeEvents(on, config) {
       // implement node event listeners here
